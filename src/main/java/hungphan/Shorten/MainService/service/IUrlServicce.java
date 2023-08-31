@@ -5,8 +5,8 @@ import hungphan.Shorten.MainService.Entity.UrlDto;
 import org.springframework.stereotype.Service;
 
 public interface IUrlServicce {
-    public Url generateShortLink(UrlDto urlDto);
+    public UrlDto generateShortLink(UrlDto urlDto);
     public Url saveShortLink(Url url);
-    public Url getEncodedUrl(String url);
+    public Url getEncodedUrl(String shortLink);
     public void deleteShortLink(Url url);
 }
