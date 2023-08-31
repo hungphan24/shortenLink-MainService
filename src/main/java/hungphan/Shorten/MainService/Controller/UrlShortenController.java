@@ -25,12 +25,8 @@ public class UrlShortenController {
 
     @PostMapping("/generate")
     public ResponseEntity<?> generateShortLink(@Valid UrlDto urlDto) {
-        Url url = urlServicce.generateShortLink(urlDto);
+        UrlDto retUrl = urlServicce.generateShortLink(urlDto);
 
-        UrlDto retUrl = new UrlDto();
-        retUrl.setShortLink(url.getShortLink());
-        retUrl.setUrlOriginal(url.getOriginalUrl());
-        //retUrl.setExpirationDate(url.getExpirationDate());
 
         BaseResponse baseResponse = new BaseResponse();
         baseResponse.setMessage("oke");
