@@ -3,7 +3,9 @@ package hungphan.Shorten.MainService.Controller;
 import hungphan.Shorten.MainService.Entity.BaseResponse;
 import hungphan.Shorten.MainService.Entity.Url;
 import hungphan.Shorten.MainService.Entity.UrlDto;
+import hungphan.Shorten.MainService.Proxy.AuthenticationProxy;
 import hungphan.Shorten.MainService.service.IUrlServicce;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -23,15 +25,21 @@ public class UrlShortenController {
     @Autowired
     private IUrlServicce urlServicce;
 
+    @Autowired
+    private AuthenticationProxy proxy;
+
     @PostMapping("/generate")
-    public ResponseEntity<?> generateShortLink(@Valid UrlDto urlDto) {
-        UrlDto retUrl = urlServicce.generateShortLink(urlDto);
-
-
+    public ResponseEntity<?> generateShortLink(@Valid UrlDto urlDto, HttpServletRequest request) {
+        String authenRequest = request.getHeader("Authorization");
         BaseResponse baseResponse = new BaseResponse();
-        baseResponse.setMessage("oke");
-        baseResponse.setStatusCode(200);
-        baseResponse.setData(retUrl);
+        BaseResponse responseFromAuthenService = proxy.authen(authenRequest).getBody();
+        if(responseFromAuthenService.getStatusCode() == 200) {
+            UrlDto retUrl = urlServicce.generateShortLink(urlDto);
+
+            baseResponse.setMessage("oke");
+            baseResponse.setStatusCode(200);
+            baseResponse.setData(retUrl);
+        }
 
         return new ResponseEntity<BaseResponse>(baseResponse, HttpStatus.OK);
     }
